@@ -23,7 +23,7 @@ services:
       - 27017
 
   todoapp:
-    build: /webapp
+    build: ./webapp
     container_name: csgy9223_Todo_Webapp
     image: csgy9223_webapp:latest
     restart: unless-stopped
