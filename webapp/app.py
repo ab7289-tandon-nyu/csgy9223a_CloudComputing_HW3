@@ -8,6 +8,7 @@ import os
 mongodb_host = os.environ.get('MONGO_HOST', 'localhost')
 mongodb_port = int(os.environ.get('MONGO_PORT', '27017'))
 # Configure the connection to the database
+
 client = MongoClient(mongodb_host, mongodb_port)
 db = client.camp2016  # Select the database
 todos = db.todo  # Select the collection
