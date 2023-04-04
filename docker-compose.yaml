@@ -6,7 +6,6 @@ services:
     container_name: csgy9223_mongodb
     image: csgy9223_mongodb:latest
     restart: unless-stopped
-    command: mongod
     environment:
       MONGO_INITDB_DATABASE: camp2016
       MONGODB_DATA_DIR: /data/db
