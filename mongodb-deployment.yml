@@ -18,46 +18,12 @@ spec:
       containers:
         - image: mongo
           name: mongo
-          args: ["--dbpath", "/mnt/data/"]
-          livenessProbe:
-            exec:
-              command:
-                - mongo
-                - --disableImplicitSessions
-                - --eval
-                - "db.adminCommand('ping')"
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 6
-          readinessProbe:
-            exec:
-              command:
-                - mongo
-                - --disableImplicitSessions
-                - --eval
-                - "db.adminCommand('ping')"
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            successThreshold: 1
-            failureThreshold: 6
-          env:
-          # - name: MONGO_INITDB_ROOT_USERNAME
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: mongo-creds
-          #       key: username
-          # - name: MONGO_INITDB_ROOT_PASSWORD
-          #   valueFrom:
-          #     secretKeyRef:
-          #       name: mongo-creds
-          #       key: password
+          ports:
+            - containerPort: 27017
           volumeMounts:
-            - name: "mongo-pv-volume"
+            - name: mongo-persistant-storage
               mountPath: "/data/db"
       volumes:
-        - name: "mongo-pv-claim"
+        - name: mongo-persistant-storage
           persistentVolumeClaim:
-            claimName: "mongo-pv-claim"
+            claimName: mongo-pv-claim

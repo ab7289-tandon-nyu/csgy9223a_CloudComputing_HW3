@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: webapp-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp-deployment
+  template:
+    metadata:
+      labels:
+        app: webapp-deployment
+    spec:
+      containers:
+        - name: webapp-deployment
+          image: ab7289/csgy9223-cloud-computing:latest
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 5000
+              name: webapp-int-port
+          env:
+            - name: PORT
+              value: "5000"
+            - name: FLASK_ENV
+              value: development
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "1"
+            limits:
+              memory: "1024Mi"
+              cpu: "2"
