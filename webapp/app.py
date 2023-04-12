@@ -5,7 +5,7 @@ from bson.objectid import ObjectId  # For ObjectId to work
 from bson.errors import InvalidId  # For catching InvalidId exception for ObjectId
 import os
 
-mongodb_host = os.environ.get('MONGO_SERVICE_HOST', 'localhost')
+mongodb_host = os.environ.get('MONGO_SERVICE_SERVICE_HOST', 'localhost')
 mongodb_port = int(os.environ.get('MONGO_SERVICE_SERVICE_PORT', '27017'))
 # Configure the connection to the database
 
