@@ -7,6 +7,6 @@ spec:
     app: webapp-deployment
   ports:
     - port: 8080
-      targetPort: webapp-int-port
+      targetPort: 5000
       protocol: TCP
   type: LoadBalancer

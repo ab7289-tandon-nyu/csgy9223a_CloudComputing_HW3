@@ -9,6 +9,7 @@ spec:
   selector:
     matchLabels:
       app: mongo
+      role: mongo
   strategy: {}
   template:
     metadata:
@@ -21,9 +22,9 @@ spec:
           ports:
             - containerPort: 27017
           volumeMounts:
-            - name: mongo-persistant-storage
+            - name: mongo-persistant-volume
               mountPath: "/data/db"
-      volumes:
-        - name: mongo-persistant-storage
-          persistentVolumeClaim:
-            claimName: mongo-pv-claim
+          volumes:
+            - name: mongo-persistant-volume
+              persistentVolumeClaim:
+                claimName: mongo-pv-claim

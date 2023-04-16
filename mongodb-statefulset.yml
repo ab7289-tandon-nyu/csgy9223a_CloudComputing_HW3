@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+spec:
+  serviceName: "mongo-service-headless"
+  replicas: 3
+  selector:
+    matchLabels:
+      role: mongo
+  template:
+    metadata:
+      labels:
+        role: mongo
+        environment: test
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mongo
+          image: mongo
+          command:
+            - mongod
+            - "--replSet"
+            - rs0
+            - "--bind_ip"
+            - "0.0.0.0"
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo-persistent-volume
+              mountPath: /mnt/data
+        - name: mongo-sidecar
+          image: cvallance/mongo-k8s-sidecar
+          env:
+            - name: MONGO_SIDECAR_POD_LABELS
+              value: "role=mongo,environment=test"
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-volume
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "fast"
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi

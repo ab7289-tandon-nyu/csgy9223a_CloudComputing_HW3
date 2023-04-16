@@ -23,8 +23,8 @@ services:
     image: csgy9223_webapp:latest
     restart: unless-stopped
     environment:
-      MONGO_SERVICE_HOST: db
-      MONGO_SERVICE_PORT: 27017
+      MONGO_SERVICE_SERVICE_HOST: db
+      MONGO_SERVICE_SERVICE_PORT: 27017
       FLASK_ENV: development
       PORT: 5000
     volumes:

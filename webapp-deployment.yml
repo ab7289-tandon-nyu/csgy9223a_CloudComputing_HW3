@@ -26,6 +26,8 @@ spec:
               value: "5000"
             - name: FLASK_ENV
               value: development
+            - name: MONGO_SERVICE_SERVICE_HOST
+              value: "mongo-1.mongo-service-headless.default.svc.cluster.local"
           resources:
             requests:
               memory: "128Mi"
