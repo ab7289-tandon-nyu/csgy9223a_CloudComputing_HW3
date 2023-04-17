@@ -5,6 +5,8 @@ metadata:
 spec:
   serviceName: "mongo-service-headless"
   replicas: 3
+  updateStrategy:
+    type: RollingUpdate
   selector:
     matchLabels:
       role: mongo
@@ -14,21 +16,39 @@ spec:
         role: mongo
         environment: test
     spec:
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 5
       containers:
         - name: mongo
-          image: mongo
+          image: ab7289/csgy9223-cloud-computing-db:latest
+          imagePullPolicy: "Always"
           command:
             - mongod
             - "--replSet"
             - rs0
             - "--bind_ip"
             - "0.0.0.0"
+          # lifecycle:
+          #   postStart:
+          #     exec:
+          #       command:
+          #         - mongosh
+          #         - --eval
+          #         - "load('init_repl_set.js')"
           ports:
             - containerPort: 27017
           volumeMounts:
             - name: mongo-persistent-volume
               mountPath: /mnt/data
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 5
+            periodSeconds: 5
         - name: mongo-sidecar
           image: cvallance/mongo-k8s-sidecar
           env:
