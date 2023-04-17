@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: AWS Stack for EKS Control Pane
+# Available top-level fields are listed in code completion
+
+Parameters:
+  SecurityGroup:
+    Description: The name of our security group
+    Type: String
+  Subnet1:
+    Type: String
+  Subnet2:
+    Type: String
+
+Resources:
+  EksClusterRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts.AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - eks.amazonaws.com
+        Version: 2012-10-17
+      Path: /
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+        - "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+
+  EksWorkerNodeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts.AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+        Version: 2012-10-17
+      Path: /
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+
+  EKSCluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Name: hw3
+      RoleArn: !GetAtt EksClusterRole.Arn
+      ResourcesVpcConfig:
+        SubnetIds:
+          - !Ref Subnet1
+          - !Ref Subnet2
+        SecurityGroupIds:
+          - !Ref SecurityGroup
+        EndpointPublicAccess: true
+        EndpointPrivateAccess: false
+        PublicAccessCidrs:
+          - "10.0.0.0/16"
+      Logging:
+        ClusterLogging:
+          EnabledTypes:
+            - Type: api
+            - Type: audit
+
+  EksNodeGroup:
+    Type: AWS::EKS::Nodegroup
+    Properties:
+      ClusterName: !Ref EKSCluster
+      NodeRole: !GetAtt EksWorkerNodeRole.Arn
+      # CapacityType: SPOT
+      # ScalingConfig:
+      #   MinSize: 1
+      #   DesiredSize: 1
+      #   MaxSize: 3
+      InstanceTypes:
+        - t3.small
+      Subnets:
+        - !Ref Subnet1
+        - !Ref Subnet2
+
+Outputs:
+  Endpoint:
+    Value: !GetAtt EKSCluster.Endpoint
