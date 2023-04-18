@@ -12,14 +12,14 @@ Resources:
   #       KubeClusterName: !Ref EKSControlPane
   #       Namespace: !GetAtt EKSControlPane.Outputs.Namespace
 
-  EKSControlPane:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location: eks/template.yml
-      Parameters:
-        SecurityGroup: !GetAtt VPCStack.Outputs.SecurityGroup
-        Subnet1: !GetAtt VPCStack.Outputs.PublicSubnet1
-        Subnet2: !GetAtt VPCStack.Outputs.PublicSubnet2
+  # EKSControlPane:
+  #   Type: AWS::Serverless::Application
+  #   Properties:
+  #     Location: eks/template.yml
+  #     Parameters:
+  #       SecurityGroup: !GetAtt VPCStack.Outputs.SecurityGroup
+  #       Subnet1: !GetAtt VPCStack.Outputs.PublicSubnet1
+  #       Subnet2: !GetAtt VPCStack.Outputs.PublicSubnet2
 
   VPCStack:
     Type: AWS::Serverless::Application
@@ -27,5 +27,7 @@ Resources:
       Location: vpc/template.yml
 
 Outputs:
-  ClusterEndpoint:
-    Value: !GetAtt EKSControlPane.Outputs.Endpoint
+  VPCName:
+    Value: !GetAtt VPCStack.Outputs.VPC
+  # ClusterEndpoint:
+  #   Value: !GetAtt EKSControlPane.Outputs.Endpoint
