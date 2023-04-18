@@ -58,7 +58,7 @@ Resources:
         EndpointPublicAccess: true
         EndpointPrivateAccess: false
         PublicAccessCidrs:
-          - "10.0.0.0/16"
+          - "172.35.0.0/16"
       Logging:
         ClusterLogging:
           EnabledTypes:
