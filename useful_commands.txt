@@ -3,3 +3,23 @@ To connect to EKS Cluster:
 may need to remove HOME/.kube/config
 
 Useful Related Guide: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+
+
+
+## Minikube Initialization
+
+- Insure that minikube and kubectl are installed locally
+- start up the minikube server with `minikube start`
+- once the minikube cluster is up, use `kubectl apply -f ./<>.yml` in the following order
+- - `kubectl apply -f ./minikube-hostpath.yml` -- allows dynamic creation of volumes
+- - `kubectl apply -f ./mongodb-statefulset.yml`
+- - `kubectl apply -f ./mongodb-service.yml`
+- wait for the stateful set to complete, once all nodes are up
+- we need to initialize the replicaset, which we will use by applying the `init_repl_set.js` file
+  that has been copied to all DB containers.
+- run the following command `kubectl exec -it mongo-0 -- mongosh --eval "load('init_repl_set.js')"
+- now init the webapp
+- `kubectl apply -f ./webapp-deployment.yml`
+- `kubectl apply -f ./webapp-service.yml`
+- once those are done, if running on windows open up a new window and execute `minikube tunnel`
+- the server should now be accessible at 127.0.0.1:8080
