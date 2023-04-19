@@ -90,13 +90,13 @@ Resources:
       NodeRole: !GetAtt EksWorkerNodeRole.Arn
       CapacityType: ON_DEMAND
       ScalingConfig:
-        MinSize: 3
-        DesiredSize: 5
-        MaxSize: 7
-      # InstanceTypes:
-      #   - t3.small
-      #   - t3.medium
-      #   - t3.large
+        MinSize: 2
+        DesiredSize: 3
+        MaxSize: 4
+      InstanceTypes:
+        - t3.small
+        - t3.medium
+        - t3.large
       Subnets:
         - !Ref Subnet1
         - !Ref Subnet2
