@@ -37,7 +37,7 @@ Useful Related Guide: https://docs.aws.amazon.com/eks/latest/userguide/create-ku
 - delete HOME/.kube/config
 - update config with `aws eks --region us-east-1 update-kubeconfig --name hw3-eks`
 - run `kubectl get svc` to insure you can connect
-- run following commands to enable EBS Driver Role
+- run following commands to enable EBS Driver Role (ref: https://stackoverflow.com/questions/75758115/persistentvolumeclaim-is-stuck-waiting-for-a-volume-to-be-created-either-by-ex)
 - eksctl utils associate-iam-oidc-provider --region=us-east-1 --cluster=hw3-eks --approve
 - eksctl create iamserviceaccount --name ebs-csi-controller-sa --namespace kube-system --cluster hw3-eks --attach-policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy --approve --role-only --role-name AmazonEKS_EBS_CSI_DriverRole
 - eksctl create addon --name aws-ebs-csi-driver --cluster hw3-eks --service-account-role-arn arn:aws:iam::$(aws sts get-caller-identity --query Account --output text):role/AmazonEKS_EBS_CSI_DriverRole --force
