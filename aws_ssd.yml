@@ -4,5 +4,6 @@ metadata:
   name: fast
 provisioner: kubernetes.io/aws-ebs
 volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Delete
 parameters:
   type: gp2
