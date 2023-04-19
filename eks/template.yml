@@ -59,28 +59,36 @@ Resources:
         EndpointPrivateAccess: false
         PublicAccessCidrs:
           - "172.35.0.0/16"
+          - "0.0.0.0/0"
+      KubernetesNetworkConfig:
+        IpFamily: ipv4
+        ServiceIpv4Cidr: 10.100.0.0/16
       Logging:
         ClusterLogging:
           EnabledTypes:
             - Type: api
             - Type: audit
 
-  EksNodeGroup:
-    Type: AWS::EKS::Nodegroup
-    Properties:
-      ClusterName: !Ref EKSCluster
-      NodeRole: !GetAtt EksWorkerNodeRole.Arn
-      # CapacityType: SPOT
-      # ScalingConfig:
-      #   MinSize: 1
-      #   DesiredSize: 1
-      #   MaxSize: 3
-      InstanceTypes:
-        - t3.small
-      Subnets:
-        - !Ref Subnet1
-        - !Ref Subnet2
-
+  # EksNodeGroup:
+  #   Type: AWS::EKS::Nodegroup
+  #   Properties:
+  #     ClusterName: !Ref EKSCluster
+  #     NodeRole: !GetAtt EksWorkerNodeRole.Arn
+  #     CapacityType: SPOT
+  #     ScalingConfig:
+  #       MinSize: 1
+  #       DesiredSize: 2
+  #       MaxSize: 3
+  #     InstanceTypes:
+  #       - t3.small
+  #       - t3.medium
+  #     Subnets:
+  #       - !Ref Subnet1
+  #       - !Ref Subnet2
 Outputs:
   Endpoint:
     Value: !GetAtt EKSCluster.Endpoint
+  CertificateAuthorityData:
+    Value: !GetAtt EKSCluster.CertificateAuthorityData
+  ClusterSecurityGroup:
+    Value: !GetAtt EKSCluster.ClusterSecurityGroupId

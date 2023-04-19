@@ -1,0 +1,5 @@
+To connect to EKS Cluster:
+`aws eks --region us-east-1 update-kubeconfig --name hw3_eks`
+may need to remove HOME/.kube/config
+
+Useful Related Guide: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
