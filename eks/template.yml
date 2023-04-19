@@ -61,7 +61,7 @@ Resources:
   EKSCluster:
     Type: AWS::EKS::Cluster
     Properties:
-      Name: hw3_eks
+      Name: hw3-eks
       RoleArn: !GetAtt EksClusterRole.Arn
       ResourcesVpcConfig:
         SubnetIds:
