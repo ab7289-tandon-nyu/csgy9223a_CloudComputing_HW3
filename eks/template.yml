@@ -28,23 +28,7 @@ Resources:
         - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
         - "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
 
-  # EksWorkerNodeRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Statement:
-  #         - Action: sts:AssumeRole
-  #           Effect: Allow
-  #           Principal:
-  #             Service: ec2.amazonaws.com
-  #       Version: 2012-10-17
-  #     Path: /
-  #     ManagedPolicyArns:
-  #       - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  #       - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  #       - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-
-  EksFargateNodeRole:
+  EksWorkerNodeRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -52,11 +36,27 @@ Resources:
           - Action: sts:AssumeRole
             Effect: Allow
             Principal:
-              Service: eks-fargate-pods.amazonaws.com
+              Service: ec2.amazonaws.com
         Version: 2012-10-17
       Path: /
       ManagedPolicyArns:
-        - "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
+        - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+        - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+        - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+
+  # EksFargateNodeRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Statement:
+  #         - Action: sts:AssumeRole
+  #           Effect: Allow
+  #           Principal:
+  #             Service: eks-fargate-pods.amazonaws.com
+  #       Version: 2012-10-17
+  #     Path: /
+  #     ManagedPolicyArns:
+  #       - "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
 
   EKSCluster:
     Type: AWS::EKS::Cluster
@@ -83,39 +83,42 @@ Resources:
             - Type: api
             - Type: audit
 
-  # EksNodeGroup:
-  #   Type: AWS::EKS::Nodegroup
-  #   Properties:
-  #     ClusterName: !Ref EKSCluster
-  #     NodeRole: !GetAtt EksWorkerNodeRole.Arn
-  #     CapacityType: ON_DEMAND
-  #     ScalingConfig:
-  #       MinSize: 1
-  #       DesiredSize: 2
-  #       MaxSize: 3
-  #     InstanceTypes:
-  #       - t3.small
-  #       - t3.medium
-  #       - t3.large
-  #     Subnets:
-  #       - !Ref Subnet1
-  #       - !Ref Subnet2
-
-  EKSFargateProfile:
-    Type: AWS::EKS::FargateProfile
+  EksNodeGroup:
+    Type: AWS::EKS::Nodegroup
     Properties:
       ClusterName: !Ref EKSCluster
-      PodExecutionRoleArn: !GetAtt EksFargateNodeRole.Arn
+      NodeRole: !GetAtt EksWorkerNodeRole.Arn
+      CapacityType: ON_DEMAND
+      ScalingConfig:
+        MinSize: 3
+        DesiredSize: 5
+        MaxSize: 7
+      # InstanceTypes:
+      #   - t3.small
+      #   - t3.medium
+      #   - t3.large
       Subnets:
         - !Ref Subnet1
         - !Ref Subnet2
-      Selectors:
-        - Namespace: default
-          Labels:
-            - Key: "role"
-              Value: "mongo"
-            - Key: "app"
-              Value: "webapp-deployment"
+      Labels:
+        role: mongo
+        app: webapp-deployment
+
+  # EKSFargateProfile:
+  #   Type: AWS::EKS::FargateProfile
+  #   Properties:
+  #     ClusterName: !Ref EKSCluster
+  #     PodExecutionRoleArn: !GetAtt EksFargateNodeRole.Arn
+  #     Subnets:
+  #       - !Ref Subnet1
+  #       - !Ref Subnet2
+  #     Selectors:
+  #       - Namespace: default
+  #         Labels:
+  #           - Key: "role"
+  #             Value: "mongo"
+  #           - Key: "app"
+  #             Value: "webapp-deployment"
 
 Outputs:
   Endpoint:
