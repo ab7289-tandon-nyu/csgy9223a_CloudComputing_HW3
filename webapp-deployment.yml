@@ -8,6 +8,8 @@ spec:
   replicas: 3
   strategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
   selector:
     matchLabels:
       app: webapp-deployment
@@ -19,6 +21,7 @@ spec:
       containers:
         - name: webapp-deployment
           image: ab7289/csgy9223-cloud-computing:latest
+          # image: ab7289/csgy9223-cloud-computing:v1.0
           imagePullPolicy: "Always"
           ports:
             - containerPort: 5000
@@ -39,15 +42,11 @@ spec:
               cpu: "1"
           livenessProbe:
             tcpSocket:
-              # httpGet:
-              # path: /
               port: 5000
             initialDelaySeconds: 5
             periodSeconds: 5
           readinessProbe:
             tcpSocket:
-              # httpGet:
-              # path: /
               port: 5000
             initialDelaySeconds: 5
             periodSeconds: 5
