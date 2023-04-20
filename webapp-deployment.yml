@@ -20,6 +20,7 @@ spec:
     spec:
       containers:
         - name: webapp-deployment
+          # image: ab7289/csgy9223-cloud-computing:v2.0
           image: ab7289/csgy9223-cloud-computing:latest
           # image: ab7289/csgy9223-cloud-computing:v1.0
           imagePullPolicy: "Always"
